@@ -1,0 +1,1010 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Debugging Challenge Individu — Object JavaScript</title>
+  <style>
+    :root {
+      --ink: #2c2c2b;
+      --muted: #6f6d68;
+      --canvas: #fff;
+      --soft: #f9f8f7;
+      --surface: #f0efed;
+      --line: #e6e5e3;
+      --blue: #2783de;
+      --blue-soft: #e5f2fc;
+      --green: #31875f;
+      --green-soft: #e8f1ec;
+      --orange: #b76a2d;
+      --orange-soft: #fbebde;
+      --red: #d44f45;
+      --red-soft: #fce9e7;
+      --code: #202124;
+      --radius: 10px
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      margin: 0;
+      background: var(--soft);
+      color: var(--ink);
+      font: 16px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit
+    }
+
+    .app {
+      min-height: 100vh
+    }
+
+    .topbar {
+      height: 68px;
+      background: var(--canvas);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 20
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      background: var(--blue);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 800
+    }
+
+    .brand strong {
+      display: block
+    }
+
+    .brand small {
+      color: var(--muted)
+    }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 14px
+    }
+
+    .progress {
+      width: 160px;
+      height: 8px;
+      background: var(--surface);
+      border-radius: 99px;
+      overflow: hidden
+    }
+
+    .progress>span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--green);
+      transition: .25s
+    }
+
+    .layout {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 28px 32px 44px;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 24px
+    }
+
+    .panel {
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-radius: var(--radius)
+    }
+
+    .sidebar {
+      align-self: start;
+      position: sticky;
+      top: 96px;
+      overflow: hidden
+    }
+
+    .team-card {
+      padding: 18px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700
+    }
+
+    .team-name {
+      font-weight: 750;
+      margin: 3px 0 2px
+    }
+
+    .members {
+      color: var(--muted);
+      font-size: 14px
+    }
+
+    .nav-title {
+      padding: 16px 18px 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted)
+    }
+
+    .question-nav {
+      padding: 0 8px 10px
+    }
+
+    .nav-item {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      padding: 11px 10px;
+      border-radius: 8px;
+      display: grid;
+      grid-template-columns: 28px 1fr 20px;
+      gap: 9px;
+      align-items: center;
+      color: var(--ink);
+      cursor: pointer
+    }
+
+    .nav-item:hover {
+      background: var(--soft)
+    }
+
+    .nav-item.active {
+      background: var(--blue-soft);
+      color: #155f9f
+    }
+
+    .nav-num {
+      width: 26px;
+      height: 26px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      background: white
+    }
+
+    .nav-item.done .nav-num {
+      background: var(--green);
+      border-color: var(--green);
+      color: white
+    }
+
+    .nav-check {
+      color: var(--green);
+      font-weight: 800
+    }
+
+    .print-side {
+      margin: 8px 14px 16px;
+      width: calc(100% - 28px)
+    }
+
+    .main {
+      min-width: 0
+    }
+
+    .hero {
+      padding: 28px 30px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-start
+    }
+
+    .hero h1 {
+      font-size: 30px;
+      line-height: 1.15;
+      margin: 5px 0 9px;
+      letter-spacing: -.02em
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 650px
+    }
+
+    .role-card {
+      min-width: 210px;
+      background: var(--orange-soft);
+      border: 1px solid #efd4bd;
+      padding: 14px;
+      border-radius: 9px
+    }
+
+    .role-card strong {
+      display: block;
+      margin: 3px 0
+    }
+
+    .role-card small {
+      color: #765335
+    }
+
+    .question {
+      overflow: hidden
+    }
+
+    .q-head {
+      padding: 24px 28px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 9px
+    }
+
+    .badge {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 750;
+      background: var(--blue-soft);
+      color: #155f9f
+    }
+
+    .badge.medium {
+      background: var(--orange-soft);
+      color: #85501f
+    }
+
+    .q-head h2 {
+      font-size: 25px;
+      margin: 0 0 6px
+    }
+
+    .q-head p {
+      margin: 0;
+      color: var(--muted)
+    }
+
+    .q-body {
+      padding: 25px 28px
+    }
+
+    .brief {
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--blue);
+      border-radius: 8px;
+      padding: 17px 18px;
+      margin-bottom: 20px
+    }
+
+    .brief p {
+      margin: 0 0 8px
+    }
+
+    .brief ul {
+      margin: 8px 0 0;
+      padding-left: 22px
+    }
+
+    .brief code,
+    .tests code {
+      background: var(--surface);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-family: Consolas, monospace;
+      font-size: .92em
+    }
+
+    .diagnosis {
+      margin: 0 0 20px
+    }
+
+    .diagnosis label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px
+    }
+
+    .diagnosis textarea {
+      width: 100%;
+      min-height: 76px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 11px;
+      resize: vertical;
+      background: white
+    }
+
+    .editor-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px
+    }
+
+    .editor-head strong {
+      font-size: 14px
+    }
+
+    .editor-actions {
+      display: flex;
+      gap: 8px
+    }
+
+    .editor {
+      width: 100%;
+      min-height: 300px;
+      resize: vertical;
+      border: 1px solid #3f4247;
+      background: var(--code);
+      color: #f3f4f6;
+      border-radius: 9px;
+      padding: 17px;
+      font: 14px/1.62 Consolas, "Courier New", monospace;
+      tab-size: 2;
+      outline: none
+    }
+
+    .editor:focus {
+      border-color: #70b6f3;
+      box-shadow: 0 0 0 3px rgba(39, 131, 222, .16)
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+      border-radius: 8px;
+      min-height: 42px;
+      padding: 9px 14px;
+      font-weight: 700;
+      cursor: pointer
+    }
+
+    .btn:hover {
+      background: var(--soft)
+    }
+
+    .btn:focus-visible,
+    .nav-item:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid rgba(39, 131, 222, .28);
+      outline-offset: 2px
+    }
+
+    .btn.primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: white
+    }
+
+    .btn.primary:hover {
+      background: #176fc0
+    }
+
+    .btn.success {
+      background: var(--green);
+      border-color: var(--green);
+      color: white
+    }
+
+    .btn.ghost {
+      padding: 7px 10px;
+      min-height: 36px;
+      font-size: 13px
+    }
+
+    .result {
+      display: none;
+      margin-top: 16px;
+      border-radius: 9px;
+      padding: 16px
+    }
+
+    .result.show {
+      display: block
+    }
+
+    .result.pass {
+      background: var(--green-soft);
+      border: 1px solid #bddbc9
+    }
+
+    .result.fail {
+      background: var(--red-soft);
+      border: 1px solid #efc4c0
+    }
+
+    .result h3 {
+      font-size: 16px;
+      margin: 0 0 8px
+    }
+
+    .test-row {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      font-size: 14px;
+      margin: 5px 0
+    }
+
+    .test-icon {
+      font-weight: 900
+    }
+
+    .pass .test-icon {
+      color: var(--green)
+    }
+
+    .fail .test-icon {
+      color: var(--red)
+    }
+
+    .console {
+      margin-top: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 11px;
+      border-radius: 7px;
+      font: 13px/1.5 Consolas, monospace;
+      white-space: pre-wrap;
+      color: #4c4b48
+    }
+
+    .footer-actions {
+      padding: 18px 28px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px
+    }
+
+    .reflection {
+      padding: 24px 28px;
+      margin-top: 18px
+    }
+
+    .reflection h2 {
+      font-size: 21px;
+      margin: 0 0 5px
+    }
+
+    .reflection>p {
+      margin: 0 0 18px;
+      color: var(--muted)
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px
+    }
+
+    .field textarea,
+    .field input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 11px;
+      background: white;
+      min-height: 46px
+    }
+
+    .field textarea {
+      min-height: 100px;
+      resize: vertical
+    }
+
+    .identity-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 20, 20, .55);
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 20px
+    }
+
+    .identity-overlay.hidden {
+      display: none
+    }
+
+    .modal {
+      width: min(680px, 100%);
+      background: white;
+      border-radius: 12px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .18)
+    }
+
+    .modal h1 {
+      font-size: 27px;
+      margin: 4px 0 7px
+    }
+
+    .modal>p {
+      color: var(--muted);
+      margin: 0 0 21px
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px
+    }
+
+    .form-grid .wide {
+      grid-column: 1/-1
+    }
+
+    .modal label {
+      display: block;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 5px
+    }
+
+    .modal input {
+      width: 100%;
+      height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0 12px
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 22px
+    }
+
+    .print-report {
+      display: none
+    }
+
+    .toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      background: #252525;
+      color: #fff;
+      padding: 11px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: .2s;
+      z-index: 110
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: none
+    }
+
+    @media(max-width:820px) {
+      .topbar {
+        padding: 0 18px
+      }
+
+      .progress {
+        width: 90px
+      }
+
+      .layout {
+        display: block;
+        padding: 18px
+      }
+
+      .sidebar {
+        position: static;
+        margin-bottom: 16px
+      }
+
+      .question-nav {
+        display: flex;
+        overflow-x: auto;
+        padding: 8px
+      }
+
+      .nav-item {
+        min-width: 180px
+      }
+
+      .print-side {
+        display: none
+      }
+
+      .hero {
+        padding: 22px;
+        display: block
+      }
+
+      .role-card {
+        margin-top: 18px;
+        min-width: 0
+      }
+
+      .q-head,
+      .q-body,
+      .footer-actions,
+      .reflection {
+        padding-left: 20px;
+        padding-right: 20px
+      }
+
+      .field-grid,
+      .form-grid {
+        grid-template-columns: 1fr
+      }
+
+      .form-grid .wide {
+        grid-column: auto
+      }
+
+      .editor {
+        min-height: 330px
+      }
+
+      .footer-actions .btn {
+        flex: 1
+      }
+
+      .brand small {
+        display: none
+      }
+    }
+
+    @media(max-width:470px) {
+      .progress-wrap span:first-child {
+        display: none
+      }
+
+      .layout {
+        padding: 12px
+      }
+
+      .hero h1 {
+        font-size: 25px
+      }
+
+      .q-head h2 {
+        font-size: 22px
+      }
+
+      .editor-head {
+        align-items: flex-start;
+        gap: 10px
+      }
+
+      .editor-actions {
+        flex-wrap: wrap;
+        justify-content: flex-end
+      }
+
+      .footer-actions {
+        flex-wrap: wrap
+      }
+
+      .footer-actions .primary {
+        width: 100%;
+        flex-basis: 100%
+      }
+
+      .modal {
+        padding: 22px
+      }
+
+      .topbar {
+        height: 62px
+      }
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 14mm
+      }
+
+      body {
+        background: white;
+        font-size: 10pt
+      }
+
+      .app,
+      .identity-overlay,
+      .toast {
+        display: none !important
+      }
+
+      .print-report {
+        display: block;
+        color: #222
+      }
+
+      .print-cover {
+        border-bottom: 3px solid #2783de;
+        padding-bottom: 12px;
+        margin-bottom: 18px
+      }
+
+      .print-cover h1 {
+        font-size: 22pt;
+        margin: 0 0 3px
+      }
+
+      .print-cover p {
+        margin: 2px 0
+      }
+
+      .print-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px 18px;
+        margin-top: 12px
+      }
+
+      .print-section {
+        break-inside: avoid;
+        margin: 0 0 18px
+      }
+
+      .print-section h2 {
+        font-size: 14pt;
+        border-bottom: 1px solid #bbb;
+        padding-bottom: 4px;
+        margin: 0 0 7px
+      }
+
+      .print-section h3 {
+        font-size: 11pt;
+        margin: 0 0 5px
+      }
+
+      .print-code {
+        white-space: pre-wrap;
+        background: #f4f4f4;
+        border: 1px solid #ddd;
+        padding: 9px;
+        font: 8.5pt/1.35 Consolas, monospace;
+        border-radius: 5px
+      }
+
+      .print-status {
+        font-weight: bold
+      }
+
+      .print-pass {
+        color: #287651
+      }
+
+      .print-fail {
+        color: #b43e35
+      }
+
+      .print-reflection {
+        white-space: pre-wrap;
+        border-left: 3px solid #2783de;
+        padding-left: 9px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="identity-overlay" id="identityOverlay">
+    <form class="modal" id="identityForm">
+      <div class="eyebrow">Individual Challenge • Object</div>
+      <h1>Isi identitas peserta</h1>
+      <p>Setiap kasus berisi kode yang sudah bermasalah. Baca gejalanya, temukan penyebabnya, lalu perbaiki langsung di
+        editor.</p>
+      <div class="form-grid">
+        <div class="wide"><label for="nameInput">Nama lengkap</label><input id="nameInput" required
+            placeholder="Nama peserta"></div>
+        <div><label for="schoolInput">Sekolah / kelas</label><input id="schoolInput" required
+            placeholder="Contoh: SMK X — XI RPL"></div>
+        <div><label for="dateInput">Tanggal</label><input id="dateInput" type="date" required></div>
+      </div>
+      <div class="modal-actions"><button class="btn primary" type="submit">Mulai challenge →</button></div>
+    </form>
+  </div>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">{ }</div>
+        <div><strong>Debugging Challenge</strong><small>Object JavaScript • Individu</small></div>
+      </div>
+      <div class="progress-wrap"><span id="progressText">0 / 5 selesai</span>
+        <div class="progress" aria-label="Progress"><span id="progressBar"></span></div>
+      </div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar panel">
+        <div class="team-card">
+          <div class="eyebrow">Peserta</div>
+          <div class="team-name" id="teamName">Belum diisi</div>
+          <div class="members" id="teamMembers">—</div>
+        </div>
+        <div class="nav-title">DAFTAR MISI</div>
+        <nav class="question-nav" id="questionNav" aria-label="Daftar soal"></nav>
+        <button class="btn print-side" id="editIdentity">✎ Edit identitas</button>
+        <button class="btn print-side" id="printButton">⎙ Cetak / Simpan PDF</button>
+      </aside>
+      <main class="main">
+        <section class="hero panel">
+          <div>
+            <div class="eyebrow">Modul 07 • Individual Debugging</div>
+            <h1>Lima kasus object, temukan masalahnya sendiri.</h1>
+            <p>Baca gejala, telusuri kode, tulis diagnosis, lalu buktikan perbaikannya melalui pengujian otomatis.</p>
+          </div>
+        </section>
+        <section class="question panel">
+          <div class="q-head">
+            <div class="meta"><span class="badge" id="qNumber">Misi 1</span><span class="badge"
+                id="qDifficulty">Mudah</span></div>
+            <h2 id="qTitle"></h2>
+            <p id="qSubtitle"></p>
+          </div>
+          <div class="q-body">
+            <div class="brief" id="qBrief"></div>
+            <div class="diagnosis"><label for="diagnosis"><strong>Diagnosis masalah</strong> — jelaskan temuanmu sebelum
+                memperbaiki kode.</label><textarea id="diagnosis"
+                placeholder="Contoh: Operator < seharusnya >= karena..."></textarea></div>
+            <div class="editor-head"><strong>Kode perbaikan</strong>
+              <div class="editor-actions"><button class="btn ghost" id="resetButton">Reset</button><button
+                  class="btn ghost" id="runOnlyButton">▶ Jalankan</button></div>
+            </div><textarea class="editor" id="editor" spellcheck="false" aria-label="Editor JavaScript"></textarea>
+            <div class="result" id="resultBox"></div>
+          </div>
+          <div class="footer-actions"><button class="btn" id="prevButton">← Sebelumnya</button><button
+              class="btn primary" id="checkButton">Jalankan & Cek</button><button class="btn"
+              id="nextButton">Selanjutnya →</button></div>
+        </section>
+        <section class="reflection panel">
+          <h2>Refleksi individu</h2>
+          <p>Isi setelah seluruh misi selesai. Jawaban ini akan ikut masuk ke PDF.</p>
+          <div class="field-grid">
+            <div class="field" style="grid-column:1/-1"><label for="reflection1">Bagaimana strategi kamu menemukan dan
+                memastikan perbaikan bug?</label><textarea id="reflection1"
+                placeholder="Jelaskan langkah debugging yang kamu gunakan..."></textarea></div><textarea
+              id="reflection2" style="display:none"></textarea>
+            <div class="field" style="grid-column:1/-1"><label for="conclusion">Kesimpulan</label><textarea
+                id="conclusion"
+                placeholder="Tuliskan 3–5 kalimat tentang object, properti, dan cara men-debug kode yang kamu pelajari."></textarea>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <section class="print-report" id="printReport"></section>
+  <div class="toast" id="toast"></div>
+  <script>
+    const missions = [
+      {
+        title: 'Kasus 01 — Nama Peserta Tidak Ditemukan', subtitle: 'Nama peserta muncul sebagai undefined, padahal datanya sudah ada.', difficulty: 'Mudah', brief: `<p><strong>Laporan masalah:</strong> program seharusnya menampilkan nama peserta <code>"Salsa"</code>, tapi hasilnya <code>undefined</code>.</p><ul><li>Periksa nama properti pada object dengan teliti.</li><li>Perbaiki tanpa mengubah isi object.</li><li>Pastikan hasil akhirnya adalah nama peserta yang benar.</li></ul>`, starter: `const peserta = {
+  namaPeserta: "Salsa",
+  kelas: "XI RPL 3"
+};
+
+const nama = peserta.nama;
+`, vars: ['nama'], tests: [['nama menghasilkan "Salsa"', r => r.nama === 'Salsa']]
+      },
+      {
+        title: 'Kasus 02 — Status Tugas Gagal Diubah', subtitle: 'Program berhenti karena error saat mengubah status tugas.', difficulty: 'Mudah', brief: `<p><strong>Laporan masalah:</strong> program seharusnya mengubah status tugas menjadi <code>"Selesai"</code>, tapi malah terjadi error saat dijalankan.</p><ul><li>Perhatikan cara penulisan bracket notation.</li><li>Perbaiki tanpa mengubah nama object maupun propertinya.</li><li>Pastikan status akhirnya adalah "Selesai".</li></ul>`, starter: `const tugas = {
+  judul: "Menguji formulir pendaftaran",
+  status: "Belum selesai"
+};
+
+tugas[status] = "Selesai";
+const statusAkhir = tugas.status;
+`, vars: ['statusAkhir'], tests: [['statusAkhir menghasilkan "Selesai"', r => r.statusAkhir === 'Selesai']]
+      },
+      {
+        title: 'Kasus 03 — Total Nilai Ujian Keliru', subtitle: 'Hasil penjumlahan nilai tidak berupa angka yang benar.', difficulty: 'Sedang', brief: `<p><strong>Laporan masalah:</strong> program seharusnya menjumlahkan seluruh nilai pada object <code>nilaiUjian</code> menjadi satu total angka, tapi hasilnya malah berupa gabungan nama-nama mata pelajaran.</p><ul><li>Perhatikan apa yang sebenarnya ditambahkan di dalam perulangan.</li><li>Pertahankan penggunaan <code>for...in</code>.</li><li>Pastikan total akhirnya berupa angka yang benar.</li></ul>`, starter: `const nilaiUjian = {
+  matematika: 80,
+  bahasaInggris: 90,
+  ipa: 85
+};
+
+let total = 0;
+for (let mapel in nilaiUjian) {
+  total += mapel;
+}
+`, vars: ['total'], tests: [['total bernilai 255', r => r.total === 255]]
+      },
+      {
+        title: 'Kasus 04 — Kota pada Alamat Tidak Ditemukan', subtitle: 'Informasi kota muncul sebagai undefined meskipun sudah tersimpan.', difficulty: 'Sedang', brief: `<p><strong>Laporan masalah:</strong> kota pada alamat peserta seharusnya <code>"Yogyakarta"</code>, tapi program menampilkan <code>undefined</code>.</p><ul><li>Perhatikan bagaimana data alamat disimpan di dalam object.</li><li>Perbaiki tanpa mengubah data peserta.</li><li>Pastikan hasil akhirnya adalah "Yogyakarta".</li></ul>`, starter: `const peserta = {
+  nama: "Fajar",
+  alamat: {
+    jalan: "Jl. Melati No. 3",
+    kota: "Yogyakarta"
+  }
+};
+
+const kota = peserta.kota;
+`, vars: ['kota'], tests: [['kota menghasilkan "Yogyakarta"', r => r.kota === 'Yogyakarta']]
+      },
+      {
+        title: 'Kasus 05 — Evaluasi Akhir Data Pendaftaran', subtitle: 'Dua nilai akhir sekaligus tidak sesuai dengan data peserta.', difficulty: 'Final', brief: `<p><strong>Laporan masalah:</strong> Kirana memiliki status <code>"Aktif"</code> dan sudah menyelesaikan 3 modul tugas. Program seharusnya menghasilkan <code>statusAkhir</code> bernilai <code>"Aktif"</code> dan <code>totalTugas</code> bernilai <code>3</code>, tapi keduanya salah.</p><ul><li>Kode dapat memiliki lebih dari satu masalah.</li><li>Telusuri setiap baris dengan teliti.</li><li>Jangan mengubah data Kirana maupun struktur object.</li></ul>`, starter: `const peserta = {
+  nama: "Kirana",
+  status: "Nonaktif",
+  tugas: ["Modul 1", "Modul 2", "Modul 3"]
+};
+
+peserta.status = "Aktif";
+
+const statusAkhir = peserta[Status];
+const totalTugas = peserta.tugas.length - 1;
+`, vars: ['statusAkhir', 'totalTugas'], tests: [['statusAkhir bernilai "Aktif"', r => r.statusAkhir === 'Aktif'], ['totalTugas bernilai 3', r => r.totalTugas === 3]]
+      }
+    ];
+    const KEY = 'jsDebuggingObjectIndividuV1'; let current = 0; let state = { identity: {}, answers: missions.map(m => m.starter), diagnoses: missions.map(() => ''), done: missions.map(() => false), results: missions.map(() => null), reflection1: '', reflection2: '', conclusion: '' };
+    const $ = id => document.getElementById(id); function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])) }
+    function load() { try { const saved = JSON.parse(localStorage.getItem(KEY)); if (saved) { state = { ...state, ...saved }; state.answers = missions.map((m, i) => saved.answers?.[i] ?? m.starter); state.diagnoses = missions.map((_, i) => saved.diagnoses?.[i] ?? ''); state.done = missions.map((_, i) => !!saved.done?.[i]); state.results = missions.map((_, i) => saved.results?.[i] ?? null) } } catch (e) { }; const d = new Date(); $('dateInput').value = state.identity.date || `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; if (state.identity.name) { fillIdentityForm(); $('identityOverlay').classList.add('hidden') } renderAll() }
+    function save() { state.reflection1 = $('reflection1').value; state.reflection2 = $('reflection2').value; state.conclusion = $('conclusion').value; localStorage.setItem(KEY, JSON.stringify(state)) }
+    function fillIdentityForm() { $('nameInput').value = state.identity.name || ''; $('schoolInput').value = state.identity.school || ''; $('dateInput').value = state.identity.date || $('dateInput').value }
+    function renderAll() { renderNav(); renderMission(); renderTeam(); renderProgress(); $('reflection1').value = state.reflection1 || ''; $('reflection2').value = state.reflection2 || ''; $('conclusion').value = state.conclusion || '' }
+    function renderTeam() { const i = state.identity; $('teamName').textContent = i.name || 'Belum diisi'; $('teamMembers').textContent = i.school || '—' }
+    function renderNav() { const nav = $('questionNav'); nav.innerHTML = ''; missions.forEach((m, i) => { const b = document.createElement('button'); b.className = `nav-item ${i === current ? 'active' : ''} ${state.done[i] ? 'done' : ''}`; b.innerHTML = `<span class="nav-num">${state.done[i] ? '✓' : i + 1}</span><span>${esc(m.title)}</span><span class="nav-check">${state.done[i] ? '✓' : ''}</span>`; b.onclick = () => go(i); nav.appendChild(b) }) }
+    function renderMission() { const m = missions[current]; $('qNumber').textContent = `Misi ${current + 1} dari ${missions.length}`; $('qDifficulty').textContent = m.difficulty; $('qDifficulty').className = `badge ${m.difficulty === 'Mudah' ? '' : 'medium'}`; $('qTitle').textContent = m.title; $('qSubtitle').textContent = m.subtitle; $('qBrief').innerHTML = m.brief; $('editor').value = state.answers[current]; $('diagnosis').value = state.diagnoses[current] || ''; $('prevButton').disabled = current === 0; $('nextButton').disabled = current === missions.length - 1; renderResult(state.results[current]); renderTeam() }
+    function renderProgress() { const n = state.done.filter(Boolean).length; $('progressText').textContent = `${n} / ${missions.length} selesai`; $('progressBar').style.width = `${n / missions.length * 100}%` }
+    function go(i) { capture(); current = i; renderAll(); scrollTo({ top: 0, behavior: 'smooth' }) } function capture() { state.answers[current] = $('editor').value; state.diagnoses[current] = $('diagnosis').value; save() }
+    function execute(m, code) { const logs = []; const fake = { log: (...a) => logs.push(a.map(x => typeof x === 'object' ? JSON.stringify(x) : String(x)).join(' ')) }; const ret = m.vars.map(v => `${v}:typeof ${v}!=="undefined"?${v}:undefined`).join(','); try { const data = new Function('console', `${code}\n;return {${ret}}`)(fake); return { data, logs, error: null } } catch (e) { return { data: {}, logs, error: e.message } } }
+    function check(onlyRun = false) { capture(); const m = missions[current]; const r = execute(m, state.answers[current]); if (onlyRun) { state.results[current] = { only: true, error: r.error, logs: r.logs }; renderResult(state.results[current]); save(); return } const rows = m.tests.map(([name, fn]) => { let pass = false; try { pass = !r.error && fn(r.data) } catch (e) { } return { name, pass } }); const passed = rows.every(x => x.pass); state.done[current] = passed; state.results[current] = { passed, rows, error: r.error, logs: r.logs }; save(); renderAll(); toast(passed ? 'Semua pengujian berhasil!' : 'Masih ada kondisi yang perlu diperbaiki.') }
+    function renderResult(res) { const box = $('resultBox'); if (!res) { box.className = 'result'; box.innerHTML = ''; return } if (res.only) { box.className = `result show ${res.error ? 'fail' : 'pass'}`; box.innerHTML = `<h3>${res.error ? 'Kode belum dapat dijalankan' : 'Program berhasil dijalankan'}</h3>${res.error ? `<div>${esc(res.error)}</div>` : ''}<div class="console">${esc(res.logs?.join('\n') || 'Tidak ada console.log(). Nilai variabel tetap dapat diperiksa melalui tombol Jalankan & Cek.')}</div>`; return } box.className = `result show ${res.passed ? 'pass' : 'fail'}`; box.innerHTML = `<h3>${res.passed ? '✓ Misi selesai' : 'Periksa kembali kode tim'}</h3>${res.error ? `<div class="test-row"><span class="test-icon">×</span><span>${esc(res.error)}</span></div>` : ''}${(res.rows || []).map(x => `<div class="test-row"><span class="test-icon">${x.pass ? '✓' : '×'}</span><span>${esc(x.name)}</span></div>`).join('')}<div class="console">${esc(res.logs?.join('\n') || 'Tidak ada output console.log().')}</div>` }
+    function toast(msg) { $('toast').textContent = msg; $('toast').classList.add('show'); setTimeout(() => $('toast').classList.remove('show'), 1800) }
+    function buildPrint() { capture(); const i = state.identity; const score = state.done.filter(Boolean).length * 20; $('printReport').innerHTML = `<div class="print-cover"><h1>Debugging Challenge Individu — Object JavaScript</h1><p>Laporan perbaikan bug individu</p><div class="print-meta"><div><strong>Nama:</strong> ${esc(i.name)}</div><div><strong>Tanggal:</strong> ${esc(i.date)}</div><div><strong>Sekolah/Kelas:</strong> ${esc(i.school)}</div><div><strong>Skor:</strong> ${score}/100</div></div></div>${missions.map((m, n) => `<div class="print-section"><h2>${n + 1}. ${esc(m.title)}</h2><h3 class="print-status ${state.done[n] ? 'print-pass' : 'print-fail'}">${state.done[n] ? '✓ Lulus pengujian' : '× Belum lulus pengujian'}</h3><div class="print-code">${esc(state.answers[n])}</div><h3 style="margin-top:9px">Diagnosis Peserta</h3><div class="print-reflection">${esc(state.diagnoses[n] || 'Belum diisi')}</div></div>`).join('')}<div class="print-section"><h2>Refleksi Individu</h2><h3>Strategi debugging</h3><div class="print-reflection">${esc(state.reflection1 || 'Belum diisi')}</div><h3 style="margin-top:12px">Kesimpulan</h3><div class="print-reflection">${esc(state.conclusion || 'Belum diisi')}</div></div>` }
+    $('identityForm').addEventListener('submit', e => { e.preventDefault(); state.identity = { name: $('nameInput').value.trim(), school: $('schoolInput').value.trim(), date: $('dateInput').value }; save(); $('identityOverlay').classList.add('hidden'); renderAll() }); $('editIdentity').onclick = () => { fillIdentityForm(); $('identityOverlay').classList.remove('hidden') }; $('editor').addEventListener('input', () => { state.answers[current] = $('editor').value; save() }); $('diagnosis').addEventListener('input', () => { state.diagnoses[current] = $('diagnosis').value; save() }); $('editor').addEventListener('keydown', e => { if (e.key === 'Tab') { e.preventDefault(); const t = e.target, s = t.selectionStart, n = t.selectionEnd; t.value = t.value.slice(0, s) + '  ' + t.value.slice(n); t.selectionStart = t.selectionEnd = s + 2; state.answers[current] = t.value; save() } }); $('resetButton').onclick = () => { if (confirm('Kembalikan kode misi ini ke kondisi awal?')) { $('editor').value = missions[current].starter; state.answers[current] = missions[current].starter; state.done[current] = false; state.results[current] = null; save(); renderAll() } }; $('runOnlyButton').onclick = () => check(true); $('checkButton').onclick = () => check(false); $('prevButton').onclick = () => go(current - 1); $('nextButton').onclick = () => go(current + 1); $('printButton').onclick = () => { buildPrint(); window.print() };['reflection1', 'reflection2', 'conclusion'].forEach(id => $(id).addEventListener('input', save)); window.addEventListener('beforeprint', buildPrint); load();
+  </script>
+</body>
+
+</html>

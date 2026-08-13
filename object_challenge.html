@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang='id'>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Object Challenge — Modul 07 Object JavaScript</title>
+<style>
+:root{--ink:#2c2c2b;--muted:#6f6d68;--canvas:#fff;--soft:#f9f8f7;--surface:#f0efed;--line:#e6e5e3;--blue:#2783de;--blue-soft:#e5f2fc;--green:#31875f;--green-soft:#e8f1ec;--orange:#b76a2d;--orange-soft:#fbebde;--red:#d44f45;--red-soft:#fce9e7;--code:#202124;--radius:10px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--soft);color:var(--ink);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+button,input,textarea{font:inherit}
+.app{min-height:100vh}
+.topbar{height:68px;background:var(--canvas);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:20}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:38px;height:38px;border-radius:9px;background:var(--blue);color:white;display:grid;place-items:center;font-weight:800;font-size:18px}
+.brand strong{display:block}
+.brand small{color:var(--muted)}
+.progress-wrap{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:14px}
+.progress{width:160px;height:8px;background:var(--surface);border-radius:99px;overflow:hidden}
+.progress>span{display:block;height:100%;width:0;background:var(--green);transition:.25s}
+.layout{max-width:1160px;margin:0 auto;padding:28px 32px 44px;display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px}
+.panel{background:var(--canvas);border:1px solid var(--line);border-radius:var(--radius)}
+.sidebar{align-self:start;position:sticky;top:96px;overflow:hidden}
+.team-card{padding:18px;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.team-name{font-weight:750;margin:3px 0 2px}
+.members{color:var(--muted);font-size:14px}
+.nav-title{padding:16px 18px 8px;font-size:13px;font-weight:700;color:var(--muted)}
+.question-nav{padding:0 8px 10px}
+.nav-item{width:100%;border:0;background:transparent;text-align:left;padding:11px 10px;border-radius:8px;display:grid;grid-template-columns:28px 1fr 20px;gap:9px;align-items:center;color:var(--ink);cursor:pointer}
+.nav-item:hover{background:var(--soft)}
+.nav-item.active{background:var(--blue-soft);color:#155f9f}
+.nav-num{width:26px;height:26px;border:1px solid var(--line);border-radius:7px;display:grid;place-items:center;font-size:13px;background:white}
+.nav-item.done .nav-num{background:var(--green);border-color:var(--green);color:white}
+.nav-check{color:var(--green);font-weight:800}
+.print-side{margin:8px 14px 16px;width:calc(100% - 28px)}
+.main{min-width:0}
+.hero{padding:28px 30px;margin-bottom:18px;display:flex;justify-content:space-between;gap:24px;align-items:flex-start}
+.hero h1{font-size:30px;line-height:1.15;margin:5px 0 9px;letter-spacing:-.02em}
+.hero p{margin:0;color:var(--muted);max-width:650px}
+.question{overflow:hidden}
+.q-head{padding:24px 28px;border-bottom:1px solid var(--line)}
+.meta{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.badge{padding:3px 8px;border-radius:6px;font-size:12px;font-weight:750;background:var(--blue-soft);color:#155f9f}
+.badge.medium{background:var(--orange-soft);color:#85501f}
+.badge.hard{background:var(--red-soft);color:#8a2f27}
+.q-head h2{font-size:25px;margin:0 0 6px}
+.q-head p{margin:0;color:var(--muted)}
+.q-body{padding:25px 28px}
+.brief{background:var(--soft);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:8px;padding:17px 18px;margin-bottom:20px}
+.brief p{margin:0 0 8px}
+.brief ul{margin:8px 0 0;padding-left:22px}
+.brief code{background:var(--surface);padding:1px 5px;border-radius:4px;font-family:Consolas,monospace;font-size:.92em}
+.before-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.before-head strong{font-size:14px}
+.code-display{background:#1e1e2e;color:#cdd6f4;border-radius:9px;padding:16px 20px;font:13.5px/1.7 Consolas,'Courier New',monospace;white-space:pre;overflow-x:auto;margin-bottom:20px}
+.note-field{margin:0 0 20px}
+.note-field label{display:block;margin-bottom:7px;font-size:14px;font-weight:700}
+.note-field textarea{width:100%;min-height:64px;border:1px solid var(--line);border-radius:8px;padding:11px;resize:vertical;background:white}
+.editor-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.editor-head strong{font-size:14px}
+.editor-actions{display:flex;gap:8px}
+.editor{width:100%;min-height:220px;resize:vertical;border:1px solid #3f4247;background:var(--code);color:#f3f4f6;border-radius:9px;padding:17px;font:14px/1.62 Consolas,'Courier New',monospace;tab-size:2;outline:none}
+.editor:focus{border-color:#70b6f3;box-shadow:0 0 0 3px rgba(39,131,222,.16)}
+.btn{border:1px solid var(--line);background:white;color:var(--ink);border-radius:8px;min-height:42px;padding:9px 14px;font-weight:700;cursor:pointer}
+.btn:hover{background:var(--soft)}
+.btn:focus-visible,.nav-item:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid rgba(39,131,222,.28);outline-offset:2px}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:white}
+.btn.primary:hover{background:#176fc0}
+.btn.ghost{padding:7px 10px;min-height:36px;font-size:13px}
+.result{display:none;margin-top:16px;border-radius:9px;padding:16px}
+.result.show{display:block}
+.result.pass{background:var(--green-soft);border:1px solid #bddbc9}
+.result.fail{background:var(--red-soft);border:1px solid #efc4c0}
+.result h3{font-size:16px;margin:0 0 8px}
+.test-row{display:flex;gap:9px;align-items:flex-start;font-size:14px;margin:5px 0}
+.test-icon{font-weight:900}
+.pass .test-icon{color:var(--green)}
+.fail .test-icon{color:var(--red)}
+.console{margin-top:12px;background:#fff;border:1px solid var(--line);padding:11px;border-radius:7px;font:13px/1.5 Consolas,monospace;white-space:pre-wrap;color:#4c4b48}
+.footer-actions{padding:18px 28px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px}
+.reflection{padding:24px 28px;margin-top:18px}
+.reflection h2{font-size:21px;margin:0 0 5px}
+.reflection>p{margin:0 0 18px;color:var(--muted)}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field label{display:block;font-size:14px;font-weight:700;margin-bottom:6px}
+.field textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:11px;background:white;min-height:100px;resize:vertical}
+.identity-overlay{position:fixed;inset:0;background:rgba(20,20,20,.55);z-index:100;display:grid;place-items:center;padding:20px}
+.identity-overlay.hidden{display:none}
+.modal{width:min(680px,100%);background:white;border-radius:12px;padding:28px;border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.18)}
+.modal h1{font-size:27px;margin:4px 0 7px}
+.modal>p{color:var(--muted);margin:0 0 21px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-grid .wide{grid-column:1/-1}
+.modal label{display:block;font-weight:700;font-size:14px;margin-bottom:5px}
+.modal input{width:100%;height:46px;border:1px solid var(--line);border-radius:8px;padding:0 12px}
+.modal-actions{display:flex;justify-content:flex-end;margin-top:22px}
+.print-report{display:none}
+.toast{position:fixed;right:24px;bottom:24px;background:#252525;color:#fff;padding:11px 15px;border-radius:8px;font-size:14px;opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s;z-index:110}
+.toast.show{opacity:1;transform:none}
+@media(max-width:820px){.topbar{padding:0 18px}.progress{width:90px}.layout{display:block;padding:18px}.sidebar{position:static;margin-bottom:16px}.question-nav{display:flex;overflow-x:auto;padding:8px}.nav-item{min-width:180px}.print-side{display:none}.hero{padding:22px;display:block}.q-head,.q-body,.footer-actions,.reflection{padding-left:20px;padding-right:20px}.field-grid,.form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}.editor{min-height:260px}.footer-actions .btn{flex:1}.brand small{display:none}}
+@media(max-width:470px){.progress-wrap span:first-child{display:none}.layout{padding:12px}.hero h1{font-size:25px}.q-head h2{font-size:22px}.editor-head{align-items:flex-start;gap:10px}.editor-actions{flex-wrap:wrap;justify-content:flex-end}.footer-actions{flex-wrap:wrap}.modal{padding:22px}.topbar{height:62px}}
+@media print{@page{size:A4;margin:14mm}body{background:white;font-size:10pt}.app,.identity-overlay,.toast{display:none!important}.print-report{display:block;color:#222}.print-cover{border-bottom:3px solid #2783de;padding-bottom:12px;margin-bottom:18px}.print-cover h1{font-size:22pt;margin:0 0 3px}.print-cover p{margin:2px 0}.print-meta{display:grid;grid-template-columns:1fr 1fr;gap:5px 18px;margin-top:12px}.print-section{break-inside:avoid;margin:0 0 18px}.print-section h2{font-size:14pt;border-bottom:1px solid #bbb;padding-bottom:4px;margin:0 0 7px}.print-section h3{font-size:11pt;margin:0 0 5px}.print-code{white-space:pre-wrap;background:#f4f4f4;border:1px solid #ddd;padding:9px;font:8.5pt/1.35 Consolas,monospace;border-radius:5px}.print-status{font-weight:bold}.print-pass{color:#287651}.print-fail{color:#b43e35}.print-reflection{white-space:pre-wrap;border-left:3px solid #2783de;padding-left:9px}}
+</style>
+</head>
+<body>
+<div class='identity-overlay' id='identityOverlay'>
+  <form class='modal' id='identityForm'>
+    <div class='eyebrow'>Individual Challenge • Object</div>
+    <h1>Isi identitas peserta</h1>
+    <p>Setiap misi meminta kamu membangun, memperbaiki, atau mengubah struktur object sampai hasilnya sesuai target. Kerjakan langsung di editor.</p>
+    <div class='form-grid'>
+      <div class='wide'><label for='nameInput'>Nama lengkap</label><input id='nameInput' required placeholder='Nama peserta'></div>
+      <div><label for='schoolInput'>Sekolah / kelas</label><input id='schoolInput' required placeholder='Contoh: SMK X — XI RPL'></div>
+      <div><label for='dateInput'>Tanggal</label><input id='dateInput' type='date' required></div>
+    </div>
+    <div class='modal-actions'><button class='btn primary' type='submit'>Mulai challenge →</button></div>
+  </form>
+</div>
+<div class='app'>
+<header class='topbar'>
+  <div class='brand'><div class='logo'>{ }</div><div><strong>Object Challenge</strong><small>Object JavaScript • Individu</small></div></div>
+  <div class='progress-wrap'><span id='progressText'>0 / 6 selesai</span><div class='progress' aria-label='Progress'><span id='progressBar'></span></div></div>
+</header>
+<div class='layout'>
+  <aside class='sidebar panel'>
+    <div class='team-card'><div class='eyebrow'>Peserta</div><div class='team-name' id='teamName'>Belum diisi</div><div class='members' id='teamMembers'>—</div></div>
+    <div class='nav-title'>DAFTAR MISI</div><nav class='question-nav' id='questionNav' aria-label='Daftar soal'></nav>
+    <button class='btn print-side' id='editIdentity'>✎ Edit identitas</button>
+    <button class='btn print-side' id='printButton'>⎙ Cetak / Simpan PDF</button>
+  </aside>
+  <main class='main'>
+    <section class='hero panel'>
+      <div><div class='eyebrow'>Modul 07 • Object Challenge</div><h1>Satu data, satu object yang rapi.</h1><p>Bangun object dari nol, perbaiki object yang bug, atau ubah strukturnya — tanpa mengubah hasil akhirnya. Kerjakan tiap misi, lalu jalankan &amp; cek otomatis.</p></div>
+    </section>
+    <section class='question panel'>
+      <div class='q-head'><div class='meta'><span class='badge' id='qNumber'>Misi 1</span><span class='badge' id='qDifficulty'>Mudah</span></div><h2 id='qTitle'></h2><p id='qSubtitle'></p></div>
+      <div class='q-body'>
+        <div class='brief' id='qBrief'></div>
+        <div class='before-head'><strong id='beforeLabel'>Kode awal</strong></div>
+        <div class='code-display' id='beforeDisplay'></div>
+        <div class='note-field'><label for='noteInput'>Catatan pendekatan (opsional)</label><textarea id='noteInput' placeholder='Contoh: aku pakai arrow function karena...'></textarea></div>
+        <div class='editor-head'><strong>Kode kamu</strong><div class='editor-actions'><button class='btn ghost' id='resetButton'>Reset</button><button class='btn ghost' id='runOnlyButton'>▶ Jalankan</button></div></div>
+        <textarea class='editor' id='editor' spellcheck='false' aria-label='Editor JavaScript'></textarea>
+        <div class='result' id='resultBox'></div>
+      </div>
+      <div class='footer-actions'><button class='btn' id='prevButton'>← Sebelumnya</button><button class='btn primary' id='checkButton'>Jalankan & Cek</button><button class='btn' id='nextButton'>Selanjutnya →</button></div>
+    </section>
+    <section class='reflection panel'><h2>Refleksi Individu</h2><p>Isi setelah seluruh misi selesai. Jawaban ini akan ikut masuk ke PDF.</p><div class='field-grid'><div class='field' style='grid-column:1/-1'><label for='reflection1'>Bagian mana yang paling membingungkan: dot notation, bracket notation, atau nested object? Mengapa?</label><textarea id='reflection1'></textarea></div><div class='field' style='grid-column:1/-1'><label for='conclusion'>Kesimpulan</label><textarea id='conclusion' placeholder='Tuliskan 3–5 kalimat tentang manfaat object dibanding menyimpan data pada variabel-variabel terpisah.'></textarea></div></div></section>
+  </main>
+</div>
+</div>
+<section class='print-report' id='printReport'></section><div class='toast' id='toast'></div>
+<script>
+const missions=[
+{title:'Misi 01 — Gabungkan Data Peserta Jadi Satu Object',subtitle:'Tiga variabel terpisah menyimpan data yang sebenarnya saling berkaitan.',difficulty:'Mudah',beforeLabel:'Kode awal (variabel terpisah)',brief:`<p><strong>Tugas:</strong> kode awal menyimpan data satu peserta magang dalam tiga variabel terpisah. Buat satu object bernama <code>peserta</code> dengan properti <code>nama</code>, <code>asalSekolah</code>, dan <code>kelas</code> berisi nilai yang sama, lalu tampilkan ketiga nilainya menggunakan <strong>dot notation</strong> dengan <code>console.log</code>.</p><ul><li>Urutan dan jumlah baris output harus tetap sama.</li><li>Gunakan satu object, bukan tiga variabel.</li></ul>`,before:`const nama = "Nadia";
+const asalSekolah = "SMK Nusantara";
+const kelas = "XI RPL 1";
+console.log(nama);
+console.log(asalSekolah);
+console.log(kelas);`,starter:`// Buat satu object bernama peserta dengan properti nama, asalSekolah, kelas
+// Lalu tampilkan ketiga nilainya dengan dot notation memakai console.log
+`,tests:[['Output identik dengan versi manual',(r)=>!r.error&&normalize(r.logs.join('\n'))===normalize('Nadia\nSMK Nusantara\nXI RPL 1')],['Dibuat sebagai satu object literal dengan 3 properti',(r,code)=>{const m=code.match(/\{[^]*?\}/);return !!m&&(m[0].match(/:/g)||[]).length>=3}],['Mengambil nilai dengan dot notation',(r,code)=>/\.\s*(nama|asalSekolah|kelas)\b/.test(code)]]},
+{title:'Misi 02 — Akses Properti dengan Dua Cara',subtitle:'Object sudah tersedia, kamu hanya perlu mengambil datanya dengan cara yang tepat.',difficulty:'Mudah',beforeLabel:'Object yang diberikan',brief:`<p><strong>Tugas:</strong> object <code>identitas</code> di kode awal sudah lengkap. Tampilkan <code>nama</code> dan <code>kelas</code> menggunakan <strong>dot notation</strong>, lalu tampilkan <code>nomorPeserta</code> menggunakan <strong>bracket notation</strong>. Cetak dengan urutan: nama, nomorPeserta, kelas.</p>`,before:`const identitas = {
+  nama: "Bima",
+  nomorPeserta: "PKL-021",
+  kelas: "XII RPL 2"
+};`,starter:`const identitas = {
+  nama: "Bima",
+  nomorPeserta: "PKL-021",
+  kelas: "XII RPL 2"
+};
+
+// Tampilkan nama dan kelas dengan dot notation
+// Tampilkan nomorPeserta dengan bracket notation
+// Urutan cetak: nama, nomorPeserta, kelas
+`,tests:[['Output sesuai urutan yang diminta',(r)=>!r.error&&normalize(r.logs.join('\n'))===normalize('Bima\nPKL-021\nXII RPL 2')],['nomorPeserta diambil dengan bracket notation',(r,code)=>/\[\s*["']nomorPeserta["']\s*\]/.test(code)],['nama dan kelas diambil dengan dot notation',(r,code)=>/\.\s*nama\b/.test(code)&&/\.\s*kelas\b/.test(code)]]},
+{title:'Misi 03 — Perbaiki Bug: Bracket Notation Tanpa Tanda Kutip',subtitle:'Kode error saat dijalankan karena nama properti ditulis seperti variabel.',difficulty:'Sedang',beforeLabel:'Kode bermasalah (perbaiki langsung di bawah)',brief:`<p><strong>Tugas:</strong> kode di bawah seharusnya mengubah status tugas menjadi <code>"Selesai"</code> dan mencetaknya, tapi malah menghasilkan error. Perbaiki bug-nya <strong>tanpa mengubah nama object atau propertinya</strong>.</p>`,before:`const tugas = {
+  judul: "Uji coba fitur login",
+  status: "Belum selesai"
+};
+
+tugas[status] = "Selesai";
+console.log(tugas.status);`,starter:`const tugas = {
+  judul: "Uji coba fitur login",
+  status: "Belum selesai"
+};
+
+tugas[status] = "Selesai";
+console.log(tugas.status);`,tests:[['Output menjadi "Selesai", bukan error',(r)=>!r.error&&normalize(r.logs.join('\n'))===normalize('Selesai')],['Bug diperbaiki dengan bracket bertanda kutip atau dot notation',(r,code)=>/tugas\s*(\.\s*status|\[\s*["']status["']\s*\])\s*=\s*["']Selesai["']/.test(code)],['Object tugas tidak diganti nama',(r,code)=>/const\s+tugas\s*=/.test(code)]]},
+{title:'Misi 04 — Ubah, Tambah, Hapus, lalu Tampilkan Semua',subtitle:'Perbarui isi object, lalu telusuri hasil akhirnya dengan perulangan.',difficulty:'Sedang',beforeLabel:'Kode awal (sebelum diubah)',brief:`<p><strong>Tugas:</strong> pada object <code>laporan</code> di bawah, lakukan langkah berikut secara berurutan:</p><ul><li>Ubah nilai <code>status</code> menjadi <code>"Selesai"</code>.</li><li>Tambahkan properti <code>durasiJam</code> dengan nilai <code>3</code>.</li><li>Hapus properti <code>catatan</code>.</li><li>Tampilkan seluruh properti yang tersisa memakai <code>for...in</code>, satu baris per properti dengan format <code>"key: value"</code>.</li></ul>`,before:`let laporan = {
+  tanggal: "12 Agustus 2026",
+  kegiatan: "Meninjau desain UI",
+  status: "Belum selesai",
+  catatan: "Menunggu review mentor"
+};`,starter:`let laporan = {
+  tanggal: "12 Agustus 2026",
+  kegiatan: "Meninjau desain UI",
+  status: "Belum selesai",
+  catatan: "Menunggu review mentor"
+};
+
+// 1. Ubah status menjadi "Selesai"
+// 2. Tambahkan properti durasiJam = 3
+// 3. Hapus properti catatan
+// 4. Tampilkan seluruh properti akhir dengan for...in, format "key: value"
+`,tests:[['Output berisi 4 baris sesuai perubahan yang diminta',(r)=>!r.error&&normalize(r.logs.join('\n'))===normalize('tanggal: 12 Agustus 2026\nkegiatan: Meninjau desain UI\nstatus: Selesai\ndurasiJam: 3')],['Menampilkan properti dengan for...in',(r,code)=>/for\s*\(\s*(let|const|var)\s+\w+\s+in\s+/.test(code)],['Properti catatan dihapus dengan delete',(r,code)=>/delete\s+laporan\s*(\.\s*catatan|\[\s*["']catatan["']\s*\])/.test(code)]]},
+{title:'Misi 05 — Ubah Jadi Object Bersarang (Nested)',subtitle:'Bentuk data berubah, hasil keluaran harus tetap sama.',difficulty:'Sedang',beforeLabel:'Kode awal (data alamat masih terpisah)',brief:`<p><strong>Tugas:</strong> ubah struktur object di bawah supaya informasi alamat (<code>jalan</code> dan <code>kota</code>) disimpan dalam satu object bersarang bernama <code>alamat</code> di dalam <code>peserta</code>, tanpa mengubah hasil keluarannya.</p>`,before:`const peserta = {
+  nama: "Elang",
+  alamatJalan: "Jl. Kenanga No. 8",
+  alamatKota: "Bandung"
+};
+
+console.log(peserta.nama);
+console.log(peserta.alamatJalan);
+console.log(peserta.alamatKota);`,starter:`const peserta = {
+  nama: "Elang",
+  alamatJalan: "Jl. Kenanga No. 8",
+  alamatKota: "Bandung"
+};
+
+console.log(peserta.nama);
+console.log(peserta.alamatJalan);
+console.log(peserta.alamatKota);`,tests:[['Output tetap sama seperti sebelum diubah',(r)=>!r.error&&normalize(r.logs.join('\n'))===normalize('Elang\nJl. Kenanga No. 8\nBandung')],['Terdapat object bersarang bernama alamat',(r,code)=>/alamat\s*:\s*\{/.test(code)],['Properti jalan dan kota diakses melalui alamat (dua tingkat)',(r,code)=>/\.\s*alamat\s*\.\s*(jalan|kota)/.test(code)]]},
+{title:'Misi 06 — Method dalam Object dengan this dan Perulangan',subtitle:'Object tidak hanya menyimpan data, tapi juga bisa punya kemampuan (method).',difficulty:'Sulit',beforeLabel:'Spesifikasi & contoh pemanggilan',brief:`<p><strong>Tugas:</strong> buat object <code>siswa</code> dengan properti <code>nilaiTugas</code> berisi array <code>[80, 90, 70, 85]</code>, lalu tambahkan method <code>hitungRataRata()</code> di dalam object tersebut. Method harus memakai <code>this.nilaiTugas</code> beserta perulangan <code>for</code> untuk menjumlahkan seluruh nilai, lalu <strong>mengembalikan</strong> (return) rata-ratanya. Panggil <code>siswa.hitungRataRata()</code> dan cetak hasilnya dengan <code>console.log</code>.</p>`,before:`siswa.hitungRataRata()
+// nilaiTugas: [80, 90, 70, 85]`,starter:`// Buat object siswa dengan properti nilaiTugas = [80, 90, 70, 85]
+// Tambahkan method hitungRataRata() yang memakai this.nilaiTugas dan perulangan for
+// Method harus RETURN rata-ratanya, lalu console.log hasil siswa.hitungRataRata()
+`,tests:[['Output rata-rata benar (81.25)',(r)=>!r.error&&normalize(r.logs.join('\n'))===normalize('81.25')],['Method menggunakan this.nilaiTugas',(r,code)=>/this\s*\.\s*nilaiTugas/.test(code)],['Menggunakan perulangan for',(r,code)=>/for\s*\(/.test(code)],['Mengembalikan nilai dengan return',(r,code)=>/\breturn\b/.test(code)]]}
+];
+const KEY='jsObjectChallengeIndividuV1';
+let current=0;
+let state={identity:{},answers:missions.map(m=>m.starter),notes:missions.map(()=>''),done:missions.map(()=>false),results:missions.map(()=>null),reflection1:'',conclusion:''};
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function normalize(s){return String(s??'').replace(/\r\n/g,'\n').split('\n').map(l=>l.replace(/\s+$/,'')).join('\n').replace(/^\n+/,'').replace(/\n+$/,'')}
+function load(){
+  try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved){state={...state,...saved};state.answers=missions.map((m,i)=>saved.answers?.[i]??m.starter);state.notes=missions.map((_,i)=>saved.notes?.[i]??'');state.done=missions.map((_,i)=>!!saved.done?.[i]);state.results=missions.map((_,i)=>saved.results?.[i]??null)}}catch(e){}
+  const d=new Date();$('dateInput').value=state.identity.date||`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  if(state.identity.name){fillIdentityForm();$('identityOverlay').classList.add('hidden')}
+  renderAll();
+}
+function save(){state.reflection1=$('reflection1').value;state.conclusion=$('conclusion').value;localStorage.setItem(KEY,JSON.stringify(state))}
+function fillIdentityForm(){$('nameInput').value=state.identity.name||'';$('schoolInput').value=state.identity.school||'';$('dateInput').value=state.identity.date||$('dateInput').value}
+function renderAll(){renderNav();renderMission();renderTeam();renderProgress();$('reflection1').value=state.reflection1||'';$('conclusion').value=state.conclusion||''}
+function renderTeam(){const i=state.identity;$('teamName').textContent=i.name||'Belum diisi';$('teamMembers').textContent=i.school||'—'}
+function renderNav(){const nav=$('questionNav');nav.innerHTML='';missions.forEach((m,i)=>{const b=document.createElement('button');b.className=`nav-item ${i===current?'active':''} ${state.done[i]?'done':''}`;b.innerHTML=`<span class='nav-num'>${state.done[i]?'✓':i+1}</span><span>${esc(m.title)}</span><span class='nav-check'>${state.done[i]?'✓':''}</span>`;b.onclick=()=>go(i);nav.appendChild(b)})}
+function diffClass(d){return d==='Mudah'?'':(d==='Sulit'?'hard':'medium')}
+function renderMission(){const m=missions[current];$('qNumber').textContent=`Misi ${current+1} dari ${missions.length}`;$('qDifficulty').textContent=m.difficulty;$('qDifficulty').className=`badge ${diffClass(m.difficulty)}`;$('qTitle').textContent=m.title;$('qSubtitle').textContent=m.subtitle;$('qBrief').innerHTML=m.brief;$('beforeLabel').textContent=m.beforeLabel||'Kode awal';$('beforeDisplay').textContent=m.before;$('editor').value=state.answers[current];$('noteInput').value=state.notes[current]||'';$('prevButton').disabled=current===0;$('nextButton').disabled=current===missions.length-1;renderResult(state.results[current]);renderTeam()}
+function renderProgress(){const n=state.done.filter(Boolean).length;$('progressText').textContent=`${n} / ${missions.length} selesai`;$('progressBar').style.width=`${n/missions.length*100}%`}
+function go(i){capture();current=i;renderAll();scrollTo({top:0,behavior:'smooth'})}
+function capture(){state.answers[current]=$('editor').value;state.notes[current]=$('noteInput').value;save()}
+function runCode(code){const logs=[];const fake={log:(...a)=>logs.push(a.map(x=>typeof x==='object'?JSON.stringify(x):String(x)).join(' '))};try{new Function('console',code)(fake);return{logs,error:null}}catch(e){return{logs,error:e.message}}}
+function check(onlyRun=false){
+  capture();
+  const m=missions[current];
+  const code=state.answers[current];
+  const r=runCode(code);
+  if(onlyRun){state.results[current]={only:true,error:r.error,logs:r.logs};renderResult(state.results[current]);save();return}
+  const rows=m.tests.map(([name,fn])=>{let pass=false;try{pass=fn(r,code)}catch(e){}return{name,pass}});
+  const passed=rows.every(x=>x.pass);
+  state.done[current]=passed;
+  state.results[current]={passed,rows,error:r.error,logs:r.logs};
+  save();renderAll();
+  toast(passed?'Function berhasil, semua pengujian lolos!':'Belum lolos semua pengujian, cek kembali kode kamu.');
+}
+function renderResult(res){
+  const box=$('resultBox');
+  if(!res){box.className='result';box.innerHTML='';return}
+  if(res.only){box.className=`result show ${res.error?'fail':'pass'}`;box.innerHTML=`<h3>${res.error?'Kode belum dapat dijalankan':'Program berhasil dijalankan'}</h3>${res.error?`<div>${esc(res.error)}</div>`:''}<div class='console'>${esc(res.logs?.join('\n')||'Tidak ada output console.log().')}</div>`;return}
+  box.className=`result show ${res.passed?'pass':'fail'}`;
+  box.innerHTML=`<h3>${res.passed?'✓ Misi selesai':'Periksa kembali kode kamu'}</h3>${res.error?`<div class='test-row'><span class='test-icon'>×</span><span>${esc(res.error)}</span></div>`:''}${(res.rows||[]).map(x=>`<div class='test-row'><span class='test-icon'>${x.pass?'✓':'×'}</span><span>${esc(x.name)}</span></div>`).join('')}<div class='console'>${esc(res.logs?.join('\n')||'Tidak ada output console.log().')}</div>`;
+}
+function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1900)}
+function buildPrint(){
+  capture();
+  const i=state.identity;
+  const score=Math.round(state.done.filter(Boolean).length*100/missions.length);
+  $('printReport').innerHTML=`<div class='print-cover'><h1>Object Challenge — Object JavaScript</h1><p>Laporan pengerjaan individu</p><div class='print-meta'><div><strong>Nama:</strong> ${esc(i.name)}</div><div><strong>Tanggal:</strong> ${esc(i.date)}</div><div><strong>Sekolah/Kelas:</strong> ${esc(i.school)}</div><div><strong>Skor:</strong> ${score}/100</div></div></div>${missions.map((m,n)=>`<div class='print-section'><h2>${n+1}. ${esc(m.title)}</h2><h3 class='print-status ${state.done[n]?'print-pass':'print-fail'}'>${state.done[n]?'✓ Lulus pengujian':'× Belum lulus pengujian'}</h3><h3 style='margin-top:9px'>${esc(m.beforeLabel||'Kode awal')}</h3><div class='print-code'>${esc(m.before)}</div><h3 style='margin-top:9px'>Kode Jawaban</h3><div class='print-code'>${esc(state.answers[n])}</div><h3 style='margin-top:9px'>Catatan Pendekatan</h3><div class='print-reflection'>${esc(state.notes[n]||'Belum diisi')}</div></div>`).join('')}<div class='print-section'><h2>Refleksi Individu</h2><h3>Bagian tersulit</h3><div class='print-reflection'>${esc(state.reflection1||'Belum diisi')}</div><h3 style='margin-top:12px'>Kesimpulan</h3><div class='print-reflection'>${esc(state.conclusion||'Belum diisi')}</div></div>`;
+}
+$('identityForm').addEventListener('submit',e=>{e.preventDefault();state.identity={name:$('nameInput').value.trim(),school:$('schoolInput').value.trim(),date:$('dateInput').value};save();$('identityOverlay').classList.add('hidden');renderAll()});
+$('editIdentity').onclick=()=>{fillIdentityForm();$('identityOverlay').classList.remove('hidden')};
+$('editor').addEventListener('input',()=>{state.answers[current]=$('editor').value;save()});
+$('noteInput').addEventListener('input',()=>{state.notes[current]=$('noteInput').value;save()});
+$('editor').addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();const t=e.target,s=t.selectionStart,n=t.selectionEnd;t.value=t.value.slice(0,s)+'  '+t.value.slice(n);t.selectionStart=t.selectionEnd=s+2;state.answers[current]=t.value;save()}});
+$('resetButton').onclick=()=>{if(confirm('Kembalikan kode misi ini ke kondisi awal?')){$('editor').value=missions[current].starter;state.answers[current]=missions[current].starter;state.done[current]=false;state.results[current]=null;save();renderAll()}};
+$('runOnlyButton').onclick=()=>check(true);
+$('checkButton').onclick=()=>check(false);
+$('prevButton').onclick=()=>go(current-1);
+$('nextButton').onclick=()=>go(current+1);
+$('printButton').onclick=()=>{buildPrint();window.print()};
+['reflection1','conclusion'].forEach(id=>$(id).addEventListener('input',save));
+window.addEventListener('beforeprint',buildPrint);
+load();
+</script>
+</body>
+</html>
