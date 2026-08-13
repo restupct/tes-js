@@ -10,6 +10,7 @@
     --card-bg: #1e293b;
     --accent: #38bdf8;
     --accent2: #f59e0b;
+    --accent3: #34d399;
     --text: #e2e8f0;
     --muted: #94a3b8;
   }
@@ -26,7 +27,7 @@
     padding: 24px;
   }
   .wrap {
-    max-width: 860px;
+    max-width: 1000px;
     width: 100%;
   }
   header {
@@ -61,7 +62,7 @@
   }
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 24px;
   }
   .card {
@@ -105,6 +106,9 @@
     color: var(--accent);
   }
   .card.debug .tag { color: var(--accent2); }
+  .card.debug:hover { border-color: var(--accent2); box-shadow: 0 12px 32px rgba(245, 158, 11, 0.18); }
+  .card.practice .tag { color: var(--accent3); }
+  .card.practice:hover { border-color: var(--accent3); box-shadow: 0 12px 32px rgba(52, 211, 153, 0.18); }
   .card .arrow { transition: transform 0.2s ease; }
   .card:hover .arrow { transform: translateX(4px); }
   footer {
@@ -125,6 +129,13 @@
     </header>
 
     <div class="grid">
+      <a class="card practice" href="object_practice.html">
+        <span class="icon">🎯</span>
+        <h2>Object Practice</h2>
+        <p>5 misi ringan untuk pemanasan & penguatan dasar: membuat object, akses properti, ubah isi, telusuri dengan for...in, dan gabungkan object.</p>
+        <span class="tag">Mulai Latihan &nbsp;<span class="arrow">&rarr;</span></span>
+      </a>
+
       <a class="card coding" href="object_challenge.html">
         <span class="icon">🧩</span>
         <h2>Coding Challenge</h2>
