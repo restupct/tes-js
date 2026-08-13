@@ -293,6 +293,16 @@ $('printButton').onclick=()=>{buildPrint();window.print()};
 ['reflection1','conclusion'].forEach(id=>$(id).addEventListener('input',save));
 window.addEventListener('beforeprint',buildPrint);
 load();
+
+// Penghalang ringan: nonaktifkan klik kanan & shortcut umum DevTools/lihat source
+// Catatan: ini BUKAN keamanan sesungguhnya, hanya mempersulit pengguna kasual.
+document.addEventListener('contextmenu',e=>{e.preventDefault();toast('Klik kanan dinonaktifkan pada halaman ini.')});
+document.addEventListener('keydown',e=>{
+  const k=e.key.toUpperCase();
+  const blocked = k==='F12' || (e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(k)) || (e.ctrlKey&&k==='U') || (e.metaKey&&e.altKey&&['I','J','C'].includes(k));
+  if(blocked){e.preventDefault();toast('Fitur developer tools dinonaktifkan pada halaman ini.')}
+});
+document.addEventListener('selectstart',e=>{if(e.target && (e.target.id==='editor'||e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT'))return;});
 </script>
 </body>
 </html>
