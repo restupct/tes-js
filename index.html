@@ -111,6 +111,88 @@
   .card.practice:hover { border-color: var(--accent3); box-shadow: 0 12px 32px rgba(52, 211, 153, 0.18); }
   .card .arrow { transition: transform 0.2s ease; }
   .card:hover .arrow { transform: translateX(4px); }
+
+  /* ===== Materi singkat ===== */
+  .materi {
+    margin-top: 48px;
+    background: var(--card-bg);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .materi > .badge-m {
+    display: inline-block;
+    background: rgba(52, 211, 153, 0.12);
+    color: var(--accent3);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .materi h2 {
+    margin: 0 0 6px;
+    font-size: 1.5rem;
+  }
+  .materi > p.intro {
+    color: var(--muted);
+    margin: 0 0 24px;
+    line-height: 1.6;
+  }
+  .materi h3 {
+    margin: 26px 0 8px;
+    font-size: 1.08rem;
+    color: var(--accent);
+  }
+  .materi p {
+    color: var(--text);
+    line-height: 1.65;
+    margin: 0 0 10px;
+    font-size: 0.97rem;
+  }
+  .materi ul {
+    margin: 0 0 10px;
+    padding-left: 22px;
+    color: var(--text);
+    line-height: 1.65;
+    font-size: 0.97rem;
+  }
+  .materi code {
+    background: rgba(148, 163, 184, 0.14);
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.88em;
+    color: #7dd3fc;
+  }
+  .materi pre {
+    background: #0b1120;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 10px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    font: 13px/1.7 Consolas, 'Courier New', monospace;
+    color: #cbd5e1;
+    margin: 10px 0 4px;
+  }
+  .materi pre .cm { color: #64748b; }
+  .materi pre .kw { color: #c084fc; }
+  .materi pre .str { color: #86efac; }
+  .materi pre .num { color: #fbbf24; }
+  .materi pre .fn { color: #7dd3fc; }
+  .tips {
+    margin-top: 26px;
+    background: rgba(56, 189, 248, 0.08);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  .tips strong { color: var(--accent); }
+
   footer {
     text-align: center;
     margin-top: 40px;
@@ -150,6 +232,77 @@
         <span class="tag">Mulai Debugging &nbsp;<span class="arrow">&rarr;</span></span>
       </a>
     </div>
+
+    <section class="materi">
+      <span class="badge-m">Materi Singkat</span>
+      <h2>Apa itu Object?</h2>
+      <p class="intro">Object adalah cara JavaScript menyimpan <strong>banyak data yang saling berkaitan</strong> dalam satu variabel. Daripada menulis <code>nama</code>, <code>kelas</code>, dan <code>umur</code> sebagai variabel terpisah, kita merangkainya menjadi satu object dengan pasangan <strong>properti: nilai</strong>.</p>
+
+      <h3>1. Membuat Object</h3>
+      <p>Tulis pasangan <code>namaProperti: nilai</code> di dalam kurung kurawal <code>{ }</code>, dipisahkan koma:</p>
+      <pre><span class="kw">const</span> siswa = {
+  nama: <span class="str">"Nadia"</span>,
+  kelas: <span class="str">"XI RPL 1"</span>,
+  umur: <span class="num">16</span>
+};</pre>
+
+      <h3>2. Mengakses Properti</h3>
+      <p>Ada dua cara, hasilnya sama:</p>
+      <ul>
+        <li><strong>Dot notation</strong> &mdash; <code>siswa.nama</code> &rarr; <code>"Nadia"</code></li>
+        <li><strong>Bracket notation</strong> &mdash; <code>siswa["nama"]</code> &rarr; <code>"Nadia"</code></li>
+      </ul>
+      <p>Ingat: di dalam bracket, nama properti adalah <strong>string</strong>, jadi harus pakai tanda kutip. <code>siswa[nama]</code> tanpa kutip akan error karena dianggap variabel bernama <code>nama</code>.</p>
+
+      <h3>3. Mengubah, Menambah & Menghapus</h3>
+      <pre>siswa.umur = <span class="num">17</span>;              <span class="cm">// ubah nilai properti</span>
+siswa.hobi = <span class="str">"Membaca"</span>;       <span class="cm">// tambah properti baru</span>
+<span class="kw">delete</span> siswa.kelas;           <span class="cm">// hapus properti</span></pre>
+
+      <h3>4. Menelusuri Object dengan for...in</h3>
+      <p>Gunakan <code>for...in</code> untuk menampilkan semua properti tanpa menulisnya satu per satu:</p>
+      <pre><span class="kw">for</span> (<span class="kw">let</span> kunci <span class="kw">in</span> siswa) {
+  console.<span class="fn">log</span>(kunci + <span class="str">": "</span> + siswa[kunci]);
+}
+<span class="cm">// nama: Nadia</span>
+<span class="cm">// umur: 17</span>
+<span class="cm">// hobi: Membaca</span></pre>
+      <p>Perhatikan: variabel perulangan (<code>kunci</code>) berisi <strong>nama properti</strong> sebagai string, jadi untuk mengambil nilainya gunakan bracket: <code>siswa[kunci]</code>.</p>
+
+      <h3>5. Nested Object</h3>
+      <p>Nilai sebuah properti bisa berupa object lagi. Aksesnya bertingkat:</p>
+      <pre><span class="kw">const</span> peserta = {
+  nama: <span class="str">"Elang"</span>,
+  alamat: {
+    jalan: <span class="str">"Jl. Kenanga No. 8"</span>,
+    kota: <span class="str">"Bandung"</span>
+  }
+};
+console.<span class="fn">log</span>(peserta.alamat.kota); <span class="cm">// "Bandung"</span></pre>
+
+      <h3>6. Method & this</h3>
+      <p>Properti yang berisi function disebut <strong>method</strong>. Di dalam method, kata kunci <code>this</code> merujuk ke object pemiliknya:</p>
+      <pre><span class="kw">const</span> kalkulator = {
+  nilai: [<span class="num">80</span>, <span class="num">90</span>],
+  <span class="fn">rataRata</span>() {
+    <span class="kw">let</span> total = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">let</span> n <span class="kw">of</span> <span class="kw">this</span>.nilai) total += n;
+    <span class="kw">return</span> total / <span class="kw">this</span>.nilai.length;
+  }
+};
+console.<span class="fn">log</span>(kalkulator.<span class="fn">rataRata</span>()); <span class="cm">// 85</span></pre>
+
+      <h3>7. Menggabungkan Object (Spread)</h3>
+      <p>Spread operator <code>...</code> menyalin seluruh isi object ke object baru:</p>
+      <pre><span class="kw">const</span> a = { nama: <span class="str">"Raka"</span> };
+<span class="kw">const</span> b = { kelas: <span class="str">"XII RPL 1"</span> };
+<span class="kw">const</span> profil = { ...a, ...b };
+<span class="cm">// { nama: "Raka", kelas: "XII RPL 1" }</span></pre>
+
+      <div class="tips">
+        <strong>Tips:</strong> sudah baca semuanya? Coba tantang dirimu — mulai dari <strong>Object Practice</strong> untuk pemanasan, lanjut ke <strong>Coding Challenge</strong>, lalu uji ketelitianmu di <strong>Debugging Challenge</strong>. Progress kamu tersimpan otomatis di browser, dan hasil akhirnya bisa dicetak sebagai PDF.
+      </div>
+    </section>
 
     <footer>
       Dibuat untuk latihan materi Object JavaScript &middot; <a href="https://github.com/restupct/tes-js">Lihat source di GitHub</a>
