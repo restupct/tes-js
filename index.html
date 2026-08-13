@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Materi Object JS - Tantangan Interaktif</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card-bg: #1e293b;
+    --accent: #38bdf8;
+    --accent2: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .wrap {
+    max-width: 860px;
+    width: 100%;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  header .badge {
+    display: inline-block;
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--accent);
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+  header h1 {
+    font-size: 2.2rem;
+    margin: 0 0 12px;
+    background: linear-gradient(90deg, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 16px;
+    padding: 28px;
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent);
+    box-shadow: 0 12px 32px rgba(56, 189, 248, 0.18);
+  }
+  .card .icon {
+    font-size: 2.2rem;
+    margin-bottom: 16px;
+    display: inline-block;
+  }
+  .card h2 {
+    margin: 0 0 8px;
+    font-size: 1.3rem;
+  }
+  .card p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 18px;
+  }
+  .card .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .card.debug .tag { color: var(--accent2); }
+  .card .arrow { transition: transform 0.2s ease; }
+  .card:hover .arrow { transform: translateX(4px); }
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <span class="badge">JavaScript &middot; Object</span>
+      <h1>Tantangan Interaktif: Object</h1>
+      <p>Pilih salah satu mode di bawah untuk mulai belajar konsep <strong>object</strong> di JavaScript dengan cara yang lebih menantang dan langsung praktik di browser.</p>
+    </header>
+
+    <div class="grid">
+      <a class="card coding" href="object_challenge.html">
+        <span class="icon">🧩</span>
+        <h2>Coding Challenge</h2>
+        <p>6 misi progresif membuat & memanipulasi object dari nol: property, method, nested object, hingga studi kasus nyata. Kerjakan langsung di editor bawaan halaman.</p>
+        <span class="tag">Mulai Mengkode &nbsp;<span class="arrow">&rarr;</span></span>
+      </a>
+
+      <a class="card debug" href="debugging_object.html">
+        <span class="icon">🐛</span>
+        <h2>Debugging Challenge</h2>
+        <p>5 studi kasus berisi kode object yang sengaja dibuat error. Temukan dan perbaiki bug-nya: salah akses property, typo method, referensi salah, dan lainnya.</p>
+        <span class="tag">Mulai Debugging &nbsp;<span class="arrow">&rarr;</span></span>
+      </a>
+    </div>
+
+    <footer>
+      Dibuat untuk latihan materi Object JavaScript &middot; <a href="https://github.com/restupct/tes-js">Lihat source di GitHub</a>
+    </footer>
+  </div>
+</body>
+</html>
